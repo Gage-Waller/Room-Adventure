@@ -19,8 +19,13 @@ public class RoomAdventure { // Main class containing game logic
         status = "I don't see that room."; // Default if direction not found
         for (int i = 0; i < exitDirections.length; i++) { // Loop through directions
             if (noun.equals(exitDirections[i])) { // If user direction matches
+                if (currentRoom.getName().equals("Room 4") && noun.equals("south")){
+                    System.out.println("You escaped!");
+                    System.exit(0); // End the game if in final room and going south
+                }
                 currentRoom = exitDestinations[i]; // Change current room
                 status = "Changed Room"; // Update status
+                return; // Exit loop
             }
         }
     }
@@ -55,6 +60,8 @@ public class RoomAdventure { // Main class containing game logic
     private static void setupGame() { // Initializes game world
         Room room1 = new Room("Room 1"); // Create Room 1
         Room room2 = new Room("Room 2"); // Create Room 2
+        Room room3 = new Room("Room 3"); // Create Room 3
+        Room room4 = new Room("Room 4"); // Create Room 4
 
         String[] room1ExitDirections = {"east"}; // Room 1 exits
         Room[] room1ExitDestinations = {room2}; // Destination rooms for Room 1
@@ -70,8 +77,8 @@ public class RoomAdventure { // Main class containing game logic
         room1.setItemDescriptions(room1ItemDescriptions); // Set item descriptions
         room1.setGrabbables(room1Grabbables); // Set grabbable items
 
-        String[] room2ExitDirections = {"west"}; // Room 2 exits
-        Room[] room2ExitDestinations = {room1}; // Destination rooms for Room 2
+        String[] room2ExitDirections = {"west", "south"}; // Room 2 exits
+        Room[] room2ExitDestinations = {room1, room3}; // Destination rooms for Room 2
         String[] room2Items = {"fireplace", "rug"}; // Items in Room 2
         String[] room2ItemDescriptions = { // Descriptions for Room 2 items
             "It's on fire",
@@ -83,6 +90,33 @@ public class RoomAdventure { // Main class containing game logic
         room2.setItems(room2Items); // Set visible items
         room2.setItemDescriptions(room2ItemDescriptions); // Set item descriptions
         room2.setGrabbables(room2Grabbables); // Set grabbable items
+
+        String[] room3ExitDirections = {"north", "west"}; // Room 3 exits
+        Room[] room3ExitDestinations = {room2, room4}; // Destination rooms for Room 3
+        String[] room3Items = {"painting", "statue"}; // Items in Room 3
+        String[] room3ItemDescriptions = { // Descriptions for Room 3 items
+            "It's a beautiful painting.",
+            "It's a tall statue, it looks like a knight and has a sword."
+        };
+        String[] room3Grabbables = {"sword"}; // Items you can take in Room 3
+        room3.setExitDirections(room3ExitDirections); // Set exits
+        room3.setExitDestinations(room3ExitDestinations); // Set exit destinations
+        room3.setItems(room3Items); // Set visible items
+        room3.setItemDescriptions(room3ItemDescriptions); // Set item descriptions
+        room3.setGrabbables(room3Grabbables); // Set grabbable items
+
+        String[] room4ExitDirections = {"south", "east"}; // Room 4 exits
+        Room[] room4ExitDestinations = {null, room3}; // Destination rooms for Room 4
+        String[] room4Items = {"chest"}; // Items in Room 4
+        String[] room4ItemDescriptions = { // Descriptions for Room 4 items
+            "It's a large treasure chest with treasure inside."
+        };
+        String[] room4Grabbables = {"treasure"}; // Items you can take in Room 4
+        room4.setExitDirections(room4ExitDirections); // Set exits
+        room4.setExitDestinations(room4ExitDestinations); // Set exit destinations
+        room4.setItems(room4Items); // Set visible items
+        room4.setItemDescriptions(room4ItemDescriptions); // Set item descriptions
+        room4.setGrabbables(room4Grabbables); // Set grabbable items
 
         currentRoom = room1; // Start game in Room 1
     }
@@ -182,6 +216,14 @@ class Room { // Represents a game room
 
     public String[] getGrabbables() { // Getter for grabbable items
         return grabbables;
+    }
+
+    public String getName() { // Getter for room name
+        return name;
+    }
+
+    public void setName(String name) { // Setter for room name
+        this.name = name;
     }
 
     @Override
