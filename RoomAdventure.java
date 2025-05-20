@@ -57,6 +57,64 @@ public class RoomAdventure { // Main class containing game logic
         }
     }
 
+    private static void handleUse(String noun) { // Handles using items
+
+        // Checks if item is in inventory
+        boolean hasItem = false;
+        int itemIndex = -1;
+
+        for (int i = 0; i < inventory.length; i++) {
+            if (noun.equals(inventory[i])) {
+                hasItem = true;
+                itemIndex = i;
+                break;
+            }
+        }
+
+        // Player doesnt have item
+        if (!hasItem) {
+            status = "You don't have that item.";
+            return;
+        }
+
+        // Handle item-specific use cases by room
+        // switch is like an if-else statement 
+        // but executes the chosen case "block" of code 
+        // helps with easier structure
+        switch (noun) {
+            case "key":
+                if (currentRoom.getName().equals("Room 4")) {
+                    status = "You unlock the chest and find the treasure!";
+                    // Can take treasure now
+                    currentRoom.setGrabbables(new String[] {"treasure"});
+                    inventory[itemIndex] = null; // Remove when used
+                } else {
+                    status = "You can't use the key here.";
+                }
+                break;
+
+            case "coal":
+                if (currentRoom.getName().equals("Room 2")) {
+                    status = "You toss the coal into the fireplace. It lights on fire!";
+                    inventory[itemIndex] = null; // Remove when used
+                } else {
+                    status = "That won't help here.";
+                }
+                break;
+
+            case "sword":
+                if (currentRoom.getName().equals("Room 3")) {
+                    status = "You swing the sword at the statue. It clangs back!";
+                } else {
+                    status = "You wave the sword around.";
+                }
+                break;
+
+            default:
+                status = "You can't use that here.";
+        }
+    }
+
     private static void setupGame() { // Initializes game world
         Room room1 = new Room("Room 1"); // Create Room 1
         Room room2 = new Room("Room 2"); // Create Room 2
@@ -156,6 +214,9 @@ public class RoomAdventure { // Main class containing game logic
                     break;
                 case "take": // If verb is 'take'
                     handleTake(noun); // Pick up an item
+                    break;
+                case "use": // If verb is 'use'
+                    handleUse(noun);
                     break;
                 default: // If verb is unrecognized
                     status = DEFAULT_STATUS; // Set status to error message
