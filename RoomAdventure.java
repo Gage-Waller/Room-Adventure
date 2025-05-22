@@ -6,6 +6,8 @@ public class RoomAdventure { // Main class containing game logic
     private static Room currentRoom; // The room the player is currently in
     private static String[] inventory = {null, null, null, null, null}; // Player inventory slots
     private static String status; // Message to display after each action
+    private static int score = 0; // Player score
+
 
     // constants
     final private static String DEFAULT_STATUS =
@@ -21,9 +23,11 @@ public class RoomAdventure { // Main class containing game logic
             if (noun.equals(exitDirections[i])) { // If user direction matches
                 if (currentRoom.getName().equals("Room 4") && noun.equals("south")){
                     System.out.println("You escaped!");
+                    System.out.println("Final score: " + score);
                     System.exit(0); // End the game if in final room and going south
                 }
                 currentRoom = exitDestinations[i]; // Change current room
+                score += 1; // +1 for entering a new room
                 status = "Changed Room"; // Update status
                 return; // Exit loop
             }
@@ -50,6 +54,7 @@ public class RoomAdventure { // Main class containing game logic
                     if (inventory[j] == null) { // If slot is empty
                         inventory[j] = noun; // Add item to inventory
                         status = "Added it to the inventory"; // Update status
+                        score += 10; // +10 for taking an item
                         break; // Exit inventory loop
                     }
                 }
@@ -88,6 +93,7 @@ public class RoomAdventure { // Main class containing game logic
                     // Can take treasure now
                     currentRoom.setGrabbables(new String[] {"treasure"});
                     inventory[itemIndex] = null; // Remove when used
+                    score += 15; // +15 for using the key
                 } else {
                     status = "You can't use the key here.";
                 }
@@ -97,6 +103,7 @@ public class RoomAdventure { // Main class containing game logic
                 if (currentRoom.getName().equals("Room 2")) {
                     status = "You toss the coal into the fireplace. It lights on fire!";
                     inventory[itemIndex] = null; // Remove when used
+                    score += 15; // +15 for using the coal
                 } else {
                     status = "That won't help here.";
                 }
@@ -195,6 +202,8 @@ public class RoomAdventure { // Main class containing game logic
             for (int i = 0; i < inventory.length; i++) { // Loop through inventory slots
                 System.out.print(inventory[i] + " "); // Print each inventory item
             }
+            
+            System.out.println("\nScore: " + score); // Display current score
 
             System.out.println("\nWhat would you like to do? "); // Prompt user for next action
 
