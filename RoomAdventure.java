@@ -57,6 +57,12 @@ public class RoomAdventure { // Main class containing game logic
         }
     }
 
+    private static void handleHelp() {
+            String output = String.format("Current Commands are, go, take,look, and exit commands.\nThe Go command allows you to move in the 4 different directions which are north, south, east, west. To use the go command you input go (direction)\nThe take command allows you to take items from a room and add them to your inventory. To use the command do take (item name)\nThe look command allows you to examine an object in the room. To use the look command do look (object)\nTo Exit the game you can type either exit, leave, or quit");
+            System.out.println(output);
+    }
+
+
     private static void setupGame() { // Initializes game world
         Room room1 = new Room("Room 1"); // Create Room 1
         Room room2 = new Room("Room 2"); // Create Room 2
@@ -139,6 +145,16 @@ public class RoomAdventure { // Main class containing game logic
             String input = s.nextLine(); // Read entire line of input
             String[] words = input.split(" "); // Split input into words
 
+            if (input.equalsIgnoreCase("help")) {
+                handleHelp();
+                continue;
+            }
+
+            if (input.equalsIgnoreCase("quit") || input.equalsIgnoreCase("exit") || input.equalsIgnoreCase("leave")){
+                System.out.println("Thanks for playing!");
+                System.exit(0);
+            }
+
             if (words.length != 2) { // Check for proper two-word command
                 status = DEFAULT_STATUS; // Set status to error message
                 continue; // Skip to next loop iteration
@@ -147,19 +163,16 @@ public class RoomAdventure { // Main class containing game logic
             String verb = words[0]; // First word is the action verb
             String noun = words[1]; // Second word is the target noun
 
-            switch (verb) { // Decide which action to take
-                case "go": // If verb is 'go'
-                    handleGo(noun); // Move to another room
-                    break;
-                case "look": // If verb is 'look'
-                    handleLook(noun); // Describe an item
-                    break;
-                case "take": // If verb is 'take'
-                    handleTake(noun); // Pick up an item
-                    break;
-                default: // If verb is unrecognized
-                    status = DEFAULT_STATUS; // Set status to error message
+            if (verb.equalsIgnoreCase("go")) {
+                handleGo(noun);
+            } else if (verb.equalsIgnoreCase("look")) {
+                handleLook(noun);
+            } else if (verb.equalsIgnoreCase("take")) {
+                handleTake(noun);
+            } else {
+                status = DEFAULT_STATUS;
             }
+
 
             System.out.println(status); // Print the status message
         }
