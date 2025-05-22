@@ -57,11 +57,68 @@ public class RoomAdventure { // Main class containing game logic
         }
     }
 
+    private static void handleUse(String noun) { // Handles using items
+
+        // Checks if item is in inventory
+        boolean hasItem = false;
+        int itemIndex = -1;
+
+        for (int i = 0; i < inventory.length; i++) {
+            if (noun.equals(inventory[i])) {
+                hasItem = true;
+                itemIndex = i;
+                break;
+            }
+        }
+
+        // Player doesnt have item
+        if (!hasItem) {
+            status = "You don't have that item.";
+            return;
+        }
+
+        // Handle item-specific use cases by room
+        // switch is like an if-else statement 
+        // but executes the chosen case "block" of code 
+        // helps with easier structure
+        switch (noun) {
+            case "key":
+                if (currentRoom.getName().equals("Room 4")) {
+                    status = "You unlock the chest and find the treasure!";
+                    // Can take treasure now
+                    currentRoom.setGrabbables(new String[] {"treasure"});
+                    inventory[itemIndex] = null; // Remove when used
+                } else {
+                    status = "You can't use the key here.";
+                }
+                break;
+
+            case "coal":
+                if (currentRoom.getName().equals("Room 2")) {
+                    status = "You toss the coal into the fireplace. It lights on fire!";
+                    inventory[itemIndex] = null; // Remove when used
+                } else {
+                    status = "That won't help here.";
+                }
+                break;
+
+            case "sword":
+                if (currentRoom.getName().equals("Room 3")) {
+                    status = "You swing the sword at the statue. It clangs back!";
+                } else {
+                    status = "You wave the sword around.";
+                }
+                break;
+
+            default:
+                status = "You can't use that here.";
+        }
+    }
+
     private static void handleHelp() {
             String output = String.format("Current Commands are, go, take,look, and exit commands.\nThe Go command allows you to move in the 4 different directions which are north, south, east, west. To use the go command you input go (direction)\nThe take command allows you to take items from a room and add them to your inventory. To use the command do take (item name)\nThe look command allows you to examine an object in the room. To use the look command do look (object)\nTo Exit the game you can type either exit, leave, or quit");
             System.out.println(output);
     }
-
 
     private static void setupGame() { // Initializes game world
         Room room1 = new Room("Room 1"); // Create Room 1
@@ -169,10 +226,11 @@ public class RoomAdventure { // Main class containing game logic
                 handleLook(noun);
             } else if (verb.equalsIgnoreCase("take")) {
                 handleTake(noun);
+            } else if (verb.equalsIgnoreCase("use")) {
+                handleUse(noun);
             } else {
                 status = DEFAULT_STATUS;
             }
-
 
             System.out.println(status); // Print the status message
         }
