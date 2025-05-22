@@ -4,7 +4,7 @@ public class RoomAdventure { // Main class containing game logic
 
     // class variables
     private static Room currentRoom; // The room the player is currently in
-    private static String[] inventory = {null, null, null, null, null}; // Player inventory slots
+    private static String[] inventory = {null, null, null, null, null, null, null}; // Player inventory slots
     private static String status; // Message to display after each action
     private static int score = 0; // Player score
 
@@ -118,14 +118,77 @@ public class RoomAdventure { // Main class containing game logic
                 break;
 
             default:
-                status = "You can't use that here.";
-        }
+                status = "You can't use that here.";}
     }
 
     private static void handleHelp() {
-            String output = String.format("Current Commands are, go, take,look, and exit commands.\nThe Go command allows you to move in the 4 different directions which are north, south, east, west. To use the go command you input go (direction)\nThe take command allows you to take items from a room and add them to your inventory. To use the command do take (item name)\nThe look command allows you to examine an object in the room. To use the look command do look (object)\nTo Exit the game you can type either exit, leave, or quit");
+            String output = String.format("Current Commands are, go, take, use, eat, help, look, and exit commands.\nThe Go command allows you to move in the 4 different directions which are north, south, east, west. To use the go command you input go (direction)\nThe take command allows you to take items from a room and add them to your inventory. To use the command do take (item name)\nThe look command allows you to examine an object in the room. To use the look command do look (object)\nTo Exit the game you can type either exit, leave, or quit");
             System.out.println(output);
     }
+
+    private static void handleEat(String noun) {
+    boolean hasItem = false;
+    int itemIndex = -1;
+
+    for (int i = 0; i < inventory.length; i++) {
+        if (noun.equalsIgnoreCase(inventory[i])) {
+            hasItem = true;
+            itemIndex = i;
+            break;
+        }
+    }
+
+    if (!hasItem) {
+        status = "You don't have that item to eat.";
+        return;
+    }
+
+    if (noun.equalsIgnoreCase("energy_booster")) {
+        inventory[itemIndex] = null; // Remove it from inventory
+        status = "You ate the energy booster. You feel revitalized!";
+        score += 5; // Give a small score bonus
+    } else {
+        status = "You can't eat that!";}
+    }
+    
+private static void handleObserve(String noun) {
+    boolean found = false;
+
+    for (String item : inventory) {
+        if (item != null && item.equalsIgnoreCase(noun)) {
+            found = true;
+
+            // Provide descriptions for known items
+            switch (item) {
+                case "key":
+                    status = "It's a small brass key. It looks old.";
+                    break;
+                case "coal":
+                    status = "A dusty lump of coal. Feels cold.";
+                    break;
+                case "sword":
+                    status = "A heavy iron sword. Slightly rusted.";
+                    break;
+                case "energy_booster":
+                    status = "A glowing bottle labeled 'Energy Booster'. Smells fruity.";
+                    break;
+                case "treasure":
+                    status = "A pile of gold and jewels! This is what you came for!";
+                    break;
+                default:
+                    status = "It's " + item + ", but you aren't sure what it does.";
+                    break;
+            }
+
+            break; // No need to check further
+        }
+    }
+
+    if (!found) {
+        status = "You don't have that item in your inventory.";
+    }
+}
+
 
     private static void setupGame() { // Initializes game world
         Room room1 = new Room("Room 1"); // Create Room 1
@@ -149,12 +212,13 @@ public class RoomAdventure { // Main class containing game logic
 
         String[] room2ExitDirections = {"west", "south"}; // Room 2 exits
         Room[] room2ExitDestinations = {room1, room3}; // Destination rooms for Room 2
-        String[] room2Items = {"fireplace", "rug"}; // Items in Room 2
+        String[] room2Items = {"fireplace", "rug", "energy_booster"}; // Items in Room 2
         String[] room2ItemDescriptions = { // Descriptions for Room 2 items
             "It's on fire",
-            "There is a lump of coal on the rug."
+            "There is a lump of coal on the rug.",
+            "It's a glowing bottle labeled 'Energy Booster'. You feel energized just looking at it."
         };
-        String[] room2Grabbables = {"coal"}; // Items you can take in Room 2
+        String[] room2Grabbables = {"coal", "energy_booster"}; // Items you can take in Room 2
         room2.setExitDirections(room2ExitDirections); // Set exits
         room2.setExitDestinations(room2ExitDestinations); // Set exit destinations
         room2.setItems(room2Items); // Set visible items
@@ -177,11 +241,12 @@ public class RoomAdventure { // Main class containing game logic
 
         String[] room4ExitDirections = {"south", "east"}; // Room 4 exits
         Room[] room4ExitDestinations = {null, room3}; // Destination rooms for Room 4
-        String[] room4Items = {"chest"}; // Items in Room 4
+        String[] room4Items = {"chest, energy_booster"}; // Items in Room 4
         String[] room4ItemDescriptions = { // Descriptions for Room 4 items
-            "It's a large treasure chest with treasure inside."
+            "It's a large treasure chest with treasure inside.",
+            "Another bottle of Energy Booster. Looks like someone left it here!"
         };
-        String[] room4Grabbables = {"treasure"}; // Items you can take in Room 4
+        String[] room4Grabbables = {"treasure", "energy_booster"}; // Items you can take in Room 4
         room4.setExitDirections(room4ExitDirections); // Set exits
         room4.setExitDestinations(room4ExitDestinations); // Set exit destinations
         room4.setItems(room4Items); // Set visible items
@@ -238,10 +303,13 @@ public class RoomAdventure { // Main class containing game logic
                 handleTake(noun);
             } else if (verb.equalsIgnoreCase("use")) {
                 handleUse(noun);
+            } else if (verb.equalsIgnoreCase("eat")) {
+                handleEat(noun);
+            } else if (verb.equalsIgnoreCase("observe")) {
+                handleObserve(noun);        
             } else {
                 status = DEFAULT_STATUS;
             }
-
             System.out.println(status); // Print the status message
         }
     }
