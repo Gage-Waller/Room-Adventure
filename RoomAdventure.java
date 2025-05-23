@@ -1,3 +1,9 @@
+/* name: Ryan Bourge
+ * Date: 5/22/25
+ * Description: added a pet that you can escape with as
+ *  well as two more rooms to explore
+ */
+
 import java.util.Scanner; // Import Scanner for reading user input
 
 public class RoomAdventure { // Main class containing game logic
