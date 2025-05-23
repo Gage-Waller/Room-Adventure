@@ -1,3 +1,7 @@
+// Name: Gage Waller
+// Addition: Added a score system
+
+
 import java.util.Scanner; // Import Scanner for reading user input
 
 public class RoomAdventure { // Main class containing game logic
