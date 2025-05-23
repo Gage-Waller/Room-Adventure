@@ -227,6 +227,7 @@ public class RoomAdventure { // Main class containing game logic
             String verb = words[0]; // First word is the action verb
             String noun = words[1]; // Second word is the target noun
 
+
             if (verb.equalsIgnoreCase("go")) {
                 handleGo(noun);
             } else if (verb.equalsIgnoreCase("look")) {
