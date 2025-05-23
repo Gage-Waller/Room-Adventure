@@ -1,3 +1,6 @@
+// Name: Gage Waller
+// Addition: Added a "use" function
+
 import java.util.Scanner; // Import Scanner for reading user input
 
 public class RoomAdventure { // Main class containing game logic
