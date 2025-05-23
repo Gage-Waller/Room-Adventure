@@ -7,11 +7,12 @@ public class RoomAdventure { // Main class containing game logic
     private static String[] inventory = {null, null, null, null, null, null, null}; // Player inventory slots
     private static String status; // Message to display after each action
     private static int score = 0; // Player score
+    private static boolean hasCat; // check if you have cat
 
 
     // constants
     final private static String DEFAULT_STATUS =
-        "Sorry, I do not understand. Try [verb] [noun]. Valid verbs include 'go', 'look', 'take', 'use', 'observe' and 'eat'."; // Default error message
+        "Sorry, I do not understand. Try [verb] [noun]. Valid verbs include 'go', 'look', 'take', 'use', 'observe', 'pet', and 'eat'."; // Default error message
 
 
 
@@ -22,7 +23,11 @@ public class RoomAdventure { // Main class containing game logic
         for (int i = 0; i < exitDirections.length; i++) { // Loop through directions
             if (noun.equals(exitDirections[i])) { // If user direction matches
                 if (currentRoom.getName().equals("Room 4") && noun.equals("south")){
+                    if(hasCat){
+                        System.out.println("You escaped with your new best friend(the cat) You live happily ever after with your favorite companion");
+                    } else{
                     System.out.println("You escaped!");
+                    }
                     System.out.println("Final score: " + score);
                     System.exit(0); // End the game if in final room and going south
                 }
@@ -117,6 +122,15 @@ public class RoomAdventure { // Main class containing game logic
                 }
                 break;
 
+            case "cat_toy":
+                if (currentRoom.getName().equals("Room 6")) {
+                    status = "You play with the cat for a bit. It seems you have gained a new follower!";
+                    hasCat = true;
+                } else {
+                    status = "You shake the cat toy and it lights up.";
+                }
+                break;
+
             default:
                 status = "You can't use that here.";}
     }
@@ -195,6 +209,8 @@ private static void handleObserve(String noun) {
         Room room2 = new Room("Room 2"); // Create Room 2
         Room room3 = new Room("Room 3"); // Create Room 3
         Room room4 = new Room("Room 4"); // Create Room 4
+        Room room5 = new Room("Room 5"); // Create Room 5
+        Room room6 = new Room("Room 6"); // Create Room 6
 
         String[] room1ExitDirections = {"east"}; // Room 1 exits
         Room[] room1ExitDestinations = {room2}; // Destination rooms for Room 1
@@ -210,8 +226,8 @@ private static void handleObserve(String noun) {
         room1.setItemDescriptions(room1ItemDescriptions); // Set item descriptions
         room1.setGrabbables(room1Grabbables); // Set grabbable items
 
-        String[] room2ExitDirections = {"west", "south"}; // Room 2 exits
-        Room[] room2ExitDestinations = {room1, room3}; // Destination rooms for Room 2
+        String[] room2ExitDirections = {"west", "south", "east"}; // Room 2 exits
+        Room[] room2ExitDestinations = {room1, room3, room6}; // Destination rooms for Room 2
         String[] room2Items = {"fireplace", "rug", "energy_booster"}; // Items in Room 2
         String[] room2ItemDescriptions = { // Descriptions for Room 2 items
             "It's on fire",
@@ -239,9 +255,9 @@ private static void handleObserve(String noun) {
         room3.setItemDescriptions(room3ItemDescriptions); // Set item descriptions
         room3.setGrabbables(room3Grabbables); // Set grabbable items
 
-        String[] room4ExitDirections = {"south", "east"}; // Room 4 exits
-        Room[] room4ExitDestinations = {null, room3}; // Destination rooms for Room 4
-        String[] room4Items = {"chest, energy_booster"}; // Items in Room 4
+        String[] room4ExitDirections = {"south", "east", "north"}; // Room 4 exits
+        Room[] room4ExitDestinations = {null, room3, room5}; // Destination rooms for Room 4
+        String[] room4Items = {"chest", "energy_booster"}; // Items in Room 4
         String[] room4ItemDescriptions = { // Descriptions for Room 4 items
             "It's a large treasure chest with treasure inside.",
             "Another bottle of Energy Booster. Looks like someone left it here!"
@@ -252,6 +268,34 @@ private static void handleObserve(String noun) {
         room4.setItems(room4Items); // Set visible items
         room4.setItemDescriptions(room4ItemDescriptions); // Set item descriptions
         room4.setGrabbables(room4Grabbables); // Set grabbable items
+
+        String[] room5ExitDirections = {"south"}; // Room 5 exits
+        Room[] room5ExitDestinations = {room4}; // Destination rooms for Room 5
+        String[] room5Items = {"chandelier", "paper"}; // Items in Room 5
+        String[] room5ItemDescriptions = { // Descriptions for Room 5 items
+            "A beautiful glass chandelier hangs from the ceiling. A cat toy seems to be stuck inside of it.",
+            "The paper says 'beware of the black cat'."
+        };
+        String[] room5Grabbables = {"cat_toy"}; // Items you can take in Room 5
+        room5.setExitDirections(room5ExitDirections); // Set exits
+        room5.setExitDestinations(room5ExitDestinations); // Set exit destinations
+        room5.setItems(room5Items); // Set visible items
+        room5.setItemDescriptions(room5ItemDescriptions); // Set item descriptions
+        room5.setGrabbables(room5Grabbables); // Set grabbable items
+
+        String[] room6ExitDirections = {"west"}; // Room 6 exits
+        Room[] room6ExitDestinations = {room2}; // Destination rooms for Room 6
+        String[] room6Items = {"Cat", "cat_bed"}; // Items in Room 6
+        String[] room6ItemDescriptions = { // Descriptions for Room 6 items
+            "A black cat stands before you. It's tail waves slowly back and forth. It seems cautious of you."
+            , "A bed that the black cat presumebally sleeps on. It looks quite soft."
+        };
+        String[] room6Grabbables = {}; // Items you can take in Room 4
+        room6.setExitDirections(room6ExitDirections); // Set exits
+        room6.setExitDestinations(room6ExitDestinations); // Set exit destinations
+        room6.setItems(room6Items); // Set visible items
+        room6.setItemDescriptions(room6ItemDescriptions); // Set item descriptions
+        room6.setGrabbables(room6Grabbables); // Set grabbable items
 
         currentRoom = room1; // Start game in Room 1
     }
