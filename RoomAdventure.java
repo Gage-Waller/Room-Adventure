@@ -1,3 +1,5 @@
+// Whitney added the observe and eat functions, along with the energy_booster in rooms 2 & 4
+
 import java.util.Scanner; // Import Scanner for reading user input
 
 public class RoomAdventure { // Main class containing game logic
